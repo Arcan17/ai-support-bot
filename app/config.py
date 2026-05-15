@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     database_url: str = "sqlite:///./support_bot.db"
     chroma_path: str = "./chroma_db"
     app_name: str = "AI Support Bot"
-    app_version: str = "2.0.0"
+    app_version: str = "2.0.1"
     debug: bool = False
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")

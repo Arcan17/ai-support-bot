@@ -14,7 +14,7 @@
 
 ---
 
-## Current Scope — v2.0.0
+## Current Scope — v2.0.1
 
 **v2 adds RAG (Retrieval Augmented Generation) and a Streamlit demo UI on top of the v1 chatbot.**
 
@@ -158,7 +158,7 @@ Retrieve the full message history for a conversation.
 ### `GET /health`
 
 ```json
-{"status": "ok", "version": "2.0.0"}
+{"status": "ok", "version": "2.0.1"}
 ```
 
 ---
