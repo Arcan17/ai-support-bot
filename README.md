@@ -167,6 +167,10 @@ Retrieve the full message history for a conversation.
 
 A Streamlit interface is included in `demo/` for easy visual testing.
 
+### RAG in action — question answered with cited sources
+
+![Chat with RAG](docs/screenshots/chat-with-rag.png)
+
 ### Empty state — ready to accept documents
 
 ![Chat empty state](docs/screenshots/chat-empty.png)
