@@ -167,20 +167,21 @@ Retrieve the full message history for a conversation.
 
 A Streamlit interface is included in `demo/` for easy visual testing.
 
-```
-┌─────────────────────────────────────────────────────────┐
-│  Sidebar                 │  Chat                         │
-│  ─────────               │  ───────────────────────────  │
-│  📄 Upload document      │  You: What is the return      │
-│  [Choose file] [Upload]  │      policy?                  │
-│                          │                               │
-│  ✅ faq.txt — 18 chunks  │  Bot: According to the FAQ,   │
-│                          │      returns are accepted      │
-│  ⚙️ Settings             │      within 30 days…          │
-│  [x] Use doc context     │                               │
-│  [New conversation]      │      📎 Sources: faq.txt (0)  │
-└─────────────────────────────────────────────────────────┘
-```
+### Empty state — ready to accept documents
+
+![Chat empty state](docs/screenshots/chat-empty.png)
+
+### API — interactive docs
+
+![Swagger API docs](docs/screenshots/api-docs.png)
+
+**Features:**
+- ⚡ One-click **Load sample FAQ** for an instant demo
+- Custom file upload (.txt, .pdf, .csv)
+- Indexed document card with chunk count
+- Inline source badges under each assistant reply
+- "Use document context" toggle to switch RAG on/off
+- "New conversation" to reset history
 
 **Try it with the included sample FAQ:**
 
@@ -190,11 +191,10 @@ uvicorn app.main:app --reload
 
 # 2. In a new terminal, run the Streamlit UI
 pip install streamlit httpx
-streamlit run demo/streamlit_app.py
+API_URL=http://localhost:8000 streamlit run demo/streamlit_app.py
 
 # 3. Open http://localhost:8501
-#    Upload: data/sample_faq.txt
-#    Ask: "What is the return policy?" or "How do I contact support?"
+#    Click ⚡ Load sample FAQ → enable Use document context → ask a question
 ```
 
 **With Docker (API + UI together):**

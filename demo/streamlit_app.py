@@ -245,11 +245,10 @@ with st.sidebar:
 # Main — header
 # ---------------------------------------------------------------------------
 
-st.markdown("## 💬 Chat")
+st.markdown("## 💬 Chat with your knowledge base")
 st.caption(
-    "Upload a TXT, PDF or CSV file and ask questions using RAG. "
-    "The bot retrieves the most relevant document chunks before answering "
-    "and returns the sources it used."
+    "Upload a document, enable **document context**, and ask questions. "
+    "The bot retrieves the most relevant chunks and cites its sources."
 )
 st.divider()
 
