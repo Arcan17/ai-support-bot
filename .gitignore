@@ -2,7 +2,7 @@ __pycache__/
 *.pyc
 .env
 *.db
-data/
+data/*.db
 .venv/
 .pytest_cache/
 chroma_db/

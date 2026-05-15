@@ -9,9 +9,23 @@ services:
       - .env
     volumes:
       - ./data:/app/data
+      - ./chroma_db:/app/chroma_db
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
       timeout: 10s
       retries: 3
+    restart: unless-stopped
+
+  demo:
+    build:
+      context: .
+      dockerfile: demo/Dockerfile
+    ports:
+      - "8501:8501"
+    environment:
+      - API_URL=http://api:8000
+    depends_on:
+      api:
+        condition: service_healthy
     restart: unless-stopped

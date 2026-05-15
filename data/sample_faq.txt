@@ -1,0 +1,101 @@
+TechStore Chile — Frequently Asked Questions
+============================================
+
+RETURNS & REFUNDS
+-----------------
+
+Q: What is the return policy?
+A: You may return any product within 30 days of purchase, provided it is in its original condition and packaging. Products that have been damaged, modified, or used outside of normal conditions are not eligible for return.
+
+Q: How do I request a return?
+A: To request a return, contact our support team at soporte@techstore.cl with your order number and reason for return. We will send you a prepaid shipping label within 24 business hours.
+
+Q: How long do refunds take?
+A: Once we receive and inspect the returned product, your refund will be processed within 5–7 business days. Refunds are issued to the original payment method.
+
+Q: Can I exchange a product instead of getting a refund?
+A: Yes, you can exchange a product for another of equal or lesser value within the 30-day window. Contact support to initiate an exchange.
+
+Q: What items cannot be returned?
+A: The following items are non-returnable: opened software licenses, digital downloads, consumables (batteries, printer ink), and items marked as final sale.
+
+
+SHIPPING
+--------
+
+Q: What are the shipping options?
+A: We offer three shipping options:
+   - Standard (3–5 business days): Free on orders over $50,000 CLP
+   - Express (1–2 business days): $3,990 CLP
+   - Same-day delivery in Santiago: $5,990 CLP (order before 12:00)
+
+Q: Do you ship outside Santiago?
+A: Yes, we ship to all regions of Chile. Standard shipping applies nationwide. Express and same-day delivery are available in Santiago and nearby municipalities only.
+
+Q: How can I track my order?
+A: You will receive a tracking number by email once your order ships. You can track your order at track.techstore.cl or through the carrier's website (Starken, Chilexpress, or Correos Chile).
+
+Q: What happens if my package is lost?
+A: If your tracking shows no movement for more than 5 business days after dispatch, contact our support team. We will open an investigation with the carrier and, if the package is confirmed lost, send a replacement or issue a full refund at no cost to you.
+
+
+PAYMENTS
+--------
+
+Q: What payment methods do you accept?
+A: We accept Visa, MasterCard, American Express, debit cards (RedCompra), bank transfer, and Mercado Pago. We also offer installment plans (cuotas sin interés) with select cards through WebPay Plus.
+
+Q: Is it safe to pay online?
+A: Yes. All transactions are processed through WebPay Plus (Transbank), which is PCI-DSS compliant and uses TLS encryption. We do not store credit card information.
+
+Q: Can I pay in installments?
+A: Yes, we offer up to 12 interest-free installments (cuotas sin interés) on purchases over $100,000 CLP using Banco de Chile, BancoEstado, Santander, and BCI credit cards.
+
+Q: Why was my payment declined?
+A: Common reasons include insufficient funds, incorrect card details, bank restrictions on online purchases, or a security block from your bank. Contact your bank first, then try again or use a different payment method.
+
+
+WARRANTY
+--------
+
+Q: What warranty do products come with?
+A: All products sold by TechStore Chile include the legal minimum warranty of 3 months. Most electronics include a 1-year manufacturer warranty. Some products offer extended warranties of up to 3 years.
+
+Q: How do I make a warranty claim?
+A: Contact us at garantias@techstore.cl with your purchase invoice, product serial number, and a description of the issue. We will coordinate repair, replacement, or refund depending on the case.
+
+Q: Does the warranty cover accidental damage?
+A: Standard warranties do not cover accidental damage (drops, liquid damage, etc.). We offer an optional accidental damage protection plan at checkout for an additional fee.
+
+
+PRODUCTS & STOCK
+----------------
+
+Q: Do you sell refurbished products?
+A: Yes, we have a certified refurbished section on the site. All refurbished products are tested, restored to factory settings, and include a 6-month warranty. They are clearly labeled as "Reacondicionado Certificado".
+
+Q: A product I want is out of stock. When will it be available?
+A: You can click "Notify me" on the product page to receive an email when stock is replenished. Availability times vary by product — popular items typically restock within 2–4 weeks.
+
+Q: Can I cancel an order?
+A: You can cancel an order within 2 hours of placing it if it has not yet been dispatched. After that, you will need to wait for delivery and then initiate a return.
+
+
+ACCOUNT & SUPPORT
+-----------------
+
+Q: How do I create an account?
+A: Click "Crear cuenta" on the top right of the website and enter your name, email, and a password. You can also register with your Google account.
+
+Q: I forgot my password. What do I do?
+A: Click "¿Olvidaste tu contraseña?" on the login page and enter your email address. You will receive a password reset link within a few minutes.
+
+Q: How do I contact customer support?
+A: Our support team is available Monday to Friday, 9:00–18:00 (Santiago time):
+   - Chat: available on the website
+   - Email: soporte@techstore.cl
+   - Phone: +56 2 2345 6789
+   - WhatsApp: +56 9 8765 4321
+
+Q: Do you have a physical store?
+A: Yes, our showroom is located at Av. Providencia 1234, Piso 2, Santiago. Open Monday to Saturday, 10:00–19:00.

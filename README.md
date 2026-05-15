@@ -16,15 +16,17 @@
 
 ## Current Scope — v2.0.0
 
-**v2 adds RAG (Retrieval Augmented Generation) on top of the v1 chatbot.**
+**v2 adds RAG (Retrieval Augmented Generation) and a Streamlit demo UI on top of the v1 chatbot.**
 
 What's included:
 - Multi-turn conversation memory persisted in SQLite
-- Document upload endpoint (.txt, .pdf, .csv)
+- Document upload endpoint (.txt, .pdf, .csv) — max 10 MB
 - Text extraction, chunking, and embedding via OpenAI
 - ChromaDB vector store for semantic search
 - `document_context=true` flag in `/chat` injects relevant chunks into the LLM prompt
 - Sources returned in the chat response (filename + chunk index)
+- Streamlit demo UI — upload documents and chat in the browser
+- Sample FAQ document in `data/sample_faq.txt` for a quick demo
 - Input validation, graceful error handling (422 / 503), no key leaks
 - 58 passing tests — all LLM and embedding calls mocked
 
@@ -161,37 +163,77 @@ Retrieve the full message history for a conversation.
 
 ---
 
-## Demo Flow
+## Demo UI
+
+A Streamlit interface is included in `demo/` for easy visual testing.
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  Sidebar                 │  Chat                         │
+│  ─────────               │  ───────────────────────────  │
+│  📄 Upload document      │  You: What is the return      │
+│  [Choose file] [Upload]  │      policy?                  │
+│                          │                               │
+│  ✅ faq.txt — 18 chunks  │  Bot: According to the FAQ,   │
+│                          │      returns are accepted      │
+│  ⚙️ Settings             │      within 30 days…          │
+│  [x] Use doc context     │                               │
+│  [New conversation]      │      📎 Sources: faq.txt (0)  │
+└─────────────────────────────────────────────────────────┘
+```
+
+**Try it with the included sample FAQ:**
 
 ```bash
-# 1. Upload a document
-curl -X POST http://localhost:8000/documents/upload \
-  -F "file=@return_policy.txt"
+# 1. Start the API
+uvicorn app.main:app --reload
 
-# → {"document_id": 1, "filename": "return_policy.txt", "chunk_count": 8, ...}
+# 2. In a new terminal, run the Streamlit UI
+pip install streamlit httpx
+streamlit run demo/streamlit_app.py
+
+# 3. Open http://localhost:8501
+#    Upload: data/sample_faq.txt
+#    Ask: "What is the return policy?" or "How do I contact support?"
+```
+
+**With Docker (API + UI together):**
+```bash
+docker-compose up --build
+# API:  http://localhost:8000/docs
+# Demo: http://localhost:8501
+```
+
+---
+
+## Demo Flow (curl)
+
+```bash
+# 1. Upload the sample FAQ
+curl -X POST http://localhost:8000/documents/upload \
+  -F "file=@data/sample_faq.txt"
+# → {"document_id": 1, "filename": "sample_faq.txt", "chunk_count": 18, ...}
 
 # 2. Ask a question using the document
 curl -X POST http://localhost:8000/chat \
   -H "Content-Type: application/json" \
-  -d '{"user_message": "What is your return policy?", "document_context": true}'
-
+  -d '{"user_message": "What is the return policy?", "document_context": true}'
 # → {
-#     "conversation_id": "abc-123...",
-#     "assistant_response": "According to the policy, returns are accepted within 30 days...",
-#     "sources": ["return_policy.txt (chunk 0)", "return_policy.txt (chunk 2)"]
+#     "assistant_response": "Returns are accepted within 30 days...",
+#     "sources": ["sample_faq.txt (chunk 0)", "sample_faq.txt (chunk 2)"]
 #   }
 
-# 3. Continue the conversation
+# 3. Continue the conversation (multi-turn)
 curl -X POST http://localhost:8000/chat \
   -H "Content-Type: application/json" \
-  -d '{"conversation_id": "abc-123...", "user_message": "What about refunds?", "document_context": true}'
+  -d '{"conversation_id": "...", "user_message": "How long do refunds take?", "document_context": true}'
 ```
 
 ---
 
 ## Quickstart
 
-### Docker (recommended)
+### Docker — API + Demo UI
 
 ```bash
 git clone https://github.com/Arcan17/ai-support-bot.git
@@ -201,10 +243,13 @@ cp .env.example .env
 docker-compose up --build
 ```
 
-API: `http://localhost:8000`  
-Interactive docs: `http://localhost:8000/docs`
+| Service | URL |
+|---------|-----|
+| API | `http://localhost:8000` |
+| Interactive docs | `http://localhost:8000/docs` |
+| Streamlit demo | `http://localhost:8501` |
 
-### Local
+### Local — API only
 
 ```bash
 git clone https://github.com/Arcan17/ai-support-bot.git
@@ -218,6 +263,19 @@ cp .env.example .env
 # Edit .env — set your OPENAI_API_KEY
 
 uvicorn app.main:app --reload
+```
+
+### Local — API + Streamlit demo
+
+```bash
+# Terminal 1 — API
+uvicorn app.main:app --reload
+
+# Terminal 2 — Demo UI
+pip install streamlit httpx
+streamlit run demo/streamlit_app.py
+
+# Then open http://localhost:8501 and upload data/sample_faq.txt
 ```
 
 ---
@@ -345,8 +403,10 @@ SQLite tracks which documents exist, their filenames, and chunk counts. ChromaDB
 - [x] LLM error handling — HTTP 503, no key leaks, server-side logs
 - [x] RAG — document upload (.txt, .pdf, .csv) + ChromaDB retrieval
 - [x] Sources returned in chat response
+- [x] Streamlit demo UI (upload + chat + sources)
+- [x] Sample FAQ document for quick demo
 - [x] Full test suite with mocked LLM + embeddings (58 tests)
-- [x] Docker ready
+- [x] Docker ready (API + demo in docker-compose)
 - [x] CI/CD — GitHub Actions
 - [ ] `GET /documents` — list uploaded documents
 - [ ] `DELETE /documents/{id}` — remove a document and its chunks
