@@ -6,7 +6,8 @@
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=flat&logo=fastapi&logoColor=white)
 ![LangChain](https://img.shields.io/badge/LangChain-0.3-1C3C3C?style=flat)
 ![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4o--mini-412991?style=flat&logo=openai&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-20%20passing-brightgreen?style=flat)
+![Tests](https://img.shields.io/badge/tests-19%20passing-brightgreen?style=flat)
+![CI](https://img.shields.io/github/actions/workflow/status/Arcan17/ai-support-bot/ci.yml?label=CI&logo=github)
 ![Docker](https://img.shields.io/badge/Docker-ready-2496ED?style=flat&logo=docker&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-green?style=flat)
 
