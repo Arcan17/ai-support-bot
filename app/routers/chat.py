@@ -1,7 +1,8 @@
-"""Chat router: POST /chat and GET /conversations/{conversation_id}."""
+"""Chat router: POST /chat and GET /chat/conversations/{conversation_id}."""
 
 from __future__ import annotations
 
+import logging
 import uuid
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -10,7 +11,9 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import Message
 from app.schemas import ChatRequest, ChatResponse, ConversationHistory, MessageOut
-from app.services.llm_service import get_ai_response
+from app.services.llm_service import LLMError, get_ai_response
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 
@@ -19,9 +22,11 @@ router = APIRouter(prefix="/chat", tags=["chat"])
 async def chat(payload: ChatRequest, db: Session = Depends(get_db)) -> ChatResponse:
     """Send a message and receive the assistant reply.
 
-    If *conversation_id* is omitted a new conversation is started.
-    History for the given conversation is loaded from SQLite, sent to the
-    LLM, and both the user message and assistant reply are persisted.
+    If *conversation_id* is omitted a new conversation is started automatically.
+    History for the given conversation is loaded from SQLite, passed to the LLM,
+    and both the user message and assistant reply are persisted.
+
+    Returns HTTP 503 if the LLM service is unavailable or not configured.
     """
     conversation_id = payload.conversation_id or str(uuid.uuid4())
 
@@ -34,13 +39,19 @@ async def chat(payload: ChatRequest, db: Session = Depends(get_db)) -> ChatRespo
     )
     history = [{"role": m.role, "content": m.content} for m in history_rows]
 
-    # Call the LLM
-    assistant_reply = await get_ai_response(history, payload.user_message)
+    # Call the LLM — catch config/network errors and return 503
+    try:
+        assistant_reply = await get_ai_response(history, payload.user_message)
+    except LLMError as exc:
+        logger.warning("LLM unavailable for conversation %s: %s", conversation_id, exc)
+        raise HTTPException(status_code=503, detail=str(exc))
 
     # Persist user message + assistant reply
     db.add(Message(conversation_id=conversation_id, role="user", content=payload.user_message))
     db.add(Message(conversation_id=conversation_id, role="assistant", content=assistant_reply))
     db.commit()
+
+    logger.info("Chat OK — conversation=%s messages_in_history=%d", conversation_id, len(history))
 
     return ChatResponse(
         conversation_id=conversation_id,

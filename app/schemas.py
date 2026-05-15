@@ -5,14 +5,25 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class ChatRequest(BaseModel):
     """Payload for POST /chat."""
 
-    conversation_id: Optional[str] = None
-    user_message: str
+    conversation_id: Optional[str] = Field(
+        default=None,
+        max_length=100,
+        examples=["3f2a1b4c-8e1a-4b2c-9d3e-5f6a7b8c9d0e"],
+        description="Omit to start a new conversation; include to continue an existing one.",
+    )
+    user_message: str = Field(
+        ...,
+        min_length=1,
+        max_length=4000,
+        examples=["What is your return policy?"],
+        description="The user's message. Must be between 1 and 4000 characters.",
+    )
 
 
 class ChatResponse(BaseModel):

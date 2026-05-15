@@ -12,6 +12,7 @@ from sqlalchemy.pool import StaticPool
 
 from app.database import Base, get_db
 from app.main import app
+from app.services.llm_service import LLMError
 
 # ---------------------------------------------------------------------------
 # In-memory test database
@@ -57,8 +58,22 @@ def mock_llm():
 
 @pytest.fixture()
 def client(mock_llm):
-    """TestClient with the in-memory DB and mocked LLM injected."""
+    """TestClient with in-memory DB and mocked LLM (happy path)."""
     app.dependency_overrides[get_db] = override_get_db
     with TestClient(app) as c:
         yield c
     app.dependency_overrides.clear()
+
+
+@pytest.fixture()
+def client_llm_error():
+    """TestClient where get_ai_response always raises LLMError (error path)."""
+    with patch(
+        "app.routers.chat.get_ai_response",
+        new_callable=AsyncMock,
+        side_effect=LLMError("The AI service is temporarily unavailable. Please try again."),
+    ):
+        app.dependency_overrides[get_db] = override_get_db
+        with TestClient(app) as c:
+            yield c
+        app.dependency_overrides.clear()
