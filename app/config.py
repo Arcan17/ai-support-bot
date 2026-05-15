@@ -19,8 +19,9 @@ class Settings(BaseSettings):
     openai_api_key: str = ""
     openai_model: str = "gpt-4o-mini"
     database_url: str = "sqlite:///./support_bot.db"
+    chroma_path: str = "./chroma_db"
     app_name: str = "AI Support Bot"
-    app_version: str = "1.0.0"
+    app_version: str = "2.0.0"
     debug: bool = False
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")

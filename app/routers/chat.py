@@ -12,6 +12,7 @@ from app.database import get_db
 from app.models import Message
 from app.schemas import ChatRequest, ChatResponse, ConversationHistory, MessageOut
 from app.services.llm_service import LLMError, get_ai_response
+from app.services.vector_store import VectorStoreError, search
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +27,11 @@ async def chat(payload: ChatRequest, db: Session = Depends(get_db)) -> ChatRespo
     History for the given conversation is loaded from SQLite, passed to the LLM,
     and both the user message and assistant reply are persisted.
 
-    Returns HTTP 503 if the LLM service is unavailable or not configured.
+    When *document_context=true*, the most relevant uploaded document chunks
+    are retrieved from ChromaDB and injected into the LLM system prompt.
+    The chunks used are returned as *sources* in the response.
+
+    Returns HTTP 503 if the LLM service or vector store is unavailable.
     """
     conversation_id = payload.conversation_id or str(uuid.uuid4())
 
@@ -39,9 +44,23 @@ async def chat(payload: ChatRequest, db: Session = Depends(get_db)) -> ChatRespo
     )
     history = [{"role": m.role, "content": m.content} for m in history_rows]
 
-    # Call the LLM — catch config/network errors and return 503
+    # Optionally retrieve document context (RAG)
+    context_chunks: list[dict[str, str]] = []
+    if payload.document_context:
+        try:
+            context_chunks = await search(payload.user_message)
+        except VectorStoreError as exc:
+            logger.warning("Vector store unavailable: %s", exc)
+            raise HTTPException(status_code=503, detail=str(exc))
+
+    context = [c["content"] for c in context_chunks] or None
+    sources = [
+        f"{c['filename']} (chunk {c['chunk_index']})" for c in context_chunks
+    ]
+
+    # Call the LLM
     try:
-        assistant_reply = await get_ai_response(history, payload.user_message)
+        assistant_reply = await get_ai_response(history, payload.user_message, context=context)
     except LLMError as exc:
         logger.warning("LLM unavailable for conversation %s: %s", conversation_id, exc)
         raise HTTPException(status_code=503, detail=str(exc))
@@ -51,12 +70,19 @@ async def chat(payload: ChatRequest, db: Session = Depends(get_db)) -> ChatRespo
     db.add(Message(conversation_id=conversation_id, role="assistant", content=assistant_reply))
     db.commit()
 
-    logger.info("Chat OK — conversation=%s messages_in_history=%d", conversation_id, len(history))
+    logger.info(
+        "Chat OK — conversation=%s history=%d rag=%s sources=%d",
+        conversation_id,
+        len(history),
+        payload.document_context,
+        len(sources),
+    )
 
     return ChatResponse(
         conversation_id=conversation_id,
         user_message=payload.user_message,
         assistant_response=assistant_reply,
+        sources=sources,
     )
 
 

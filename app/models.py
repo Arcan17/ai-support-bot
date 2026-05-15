@@ -24,3 +24,19 @@ class Message(Base):
         default=lambda: datetime.now(timezone.utc),
         nullable=False,
     )
+
+
+class Document(Base):
+    """Metadata for an uploaded document whose chunks are stored in ChromaDB."""
+
+    __tablename__ = "documents"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    filename: Mapped[str] = mapped_column(String(255), nullable=False)
+    content_type: Mapped[str] = mapped_column(String(10), nullable=False)
+    chunk_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False,
+    )

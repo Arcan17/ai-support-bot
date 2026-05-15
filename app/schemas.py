@@ -24,6 +24,13 @@ class ChatRequest(BaseModel):
         examples=["What is your return policy?"],
         description="The user's message. Must be between 1 and 4000 characters.",
     )
+    document_context: bool = Field(
+        default=False,
+        description=(
+            "If true, the bot searches uploaded documents for relevant context "
+            "before calling the LLM. Returned sources are included in the response."
+        ),
+    )
 
 
 class ChatResponse(BaseModel):
@@ -32,6 +39,10 @@ class ChatResponse(BaseModel):
     conversation_id: str
     user_message: str
     assistant_response: str
+    sources: list[str] = Field(
+        default=[],
+        description="Document chunks used to generate the response (populated when document_context=true).",
+    )
 
 
 class MessageOut(BaseModel):
@@ -50,6 +61,15 @@ class ConversationHistory(BaseModel):
 
     conversation_id: str
     messages: list[MessageOut]
+
+
+class DocumentUploadResponse(BaseModel):
+    """Response from POST /documents/upload."""
+
+    document_id: int
+    filename: str
+    chunk_count: int
+    message: str
 
 
 class HealthResponse(BaseModel):
